@@ -4,11 +4,20 @@ const decorateUrl = require('../../lib/url-decorator');
 
 describe('url-decorator', () => {
     it('should skip url decoration if suite url is not defined', () => {
-        const suite = {url: undefined};
+        const suite = {};
 
         decorateUrl({suite});
 
-        assert.doesNotChange(() => decorateUrl({suite}), suite, 'url');
+        assert.isUndefined(suite.url);
+    });
+
+    it('should skip url decoration if suite url exists only in prototype', () => {
+        const proto = {url: 'rootUrl'};
+        const suite = Object.create(proto);
+
+        decorateUrl({suite});
+
+        assert.isFalse(suite.hasOwnProperty('url'));
     });
 
     it('should add new parameters if they do not exist in url', () => {
